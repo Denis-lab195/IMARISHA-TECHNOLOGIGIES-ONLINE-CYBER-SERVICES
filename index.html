@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imarisha Technologies | Trusted Online Cyber in Kenya</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-desktop"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>IMARISHA TECHNOLOGIES</h1>
+                    <p>Trusted Online Cyber in Kenya</p>
+                </div>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav class="nav-links" id="navLinks">
+                <a href="#home"><i class="fas fa-home"></i> Home</a>
+                <a href="#services"><i class="fas fa-concierge-bell"></i> Services</a>
+                <a href="#gov-services"><i class="fas fa-landmark"></i> Gov Services</a>
+                <a href="#partners"><i class="fas fa-handshake"></i> Partners</a>
+                <a href="#contact"><i class="fas fa-phone-alt"></i> Contact</a>
+                <div class="user-auth" id="userAuth">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Trusted Online Cyber in <span>Kenya</span></h1>
+            <div class="hero-subtitle">KRA, eCitizen, SHA, NSSF, NTSA, HELB, KUCCPS & TSC and many more Services</div>
+            <div class="contact-info">
+                <a href="tel:0748156905"><i class="fas fa-phone"></i> Call us 0748156905</a>
+            </div>
+            <p>Your premier destination for all government online services, cyber cafe amenities, and digital solutions in a modern, comfortable environment.</p>
+            <div class="hero-buttons">
+                <a href="#gov-services" class="btn-primary"><i class="fas fa-landmark"></i> Government Services</a>
+                <a href="#services" class="btn-secondary"><i class="fas fa-concierge-bell"></i> Cyber Cafe Services</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cyber Cafe Services Section -->
+    <section class="services" id="services">
+        <div class="section-title">
+            <h2>Our <span>Cyber Cafe Services</span></h2>
+            <p>Comprehensive digital services for all your needs</p>
+        </div>
+        
+        <div class="services-grid" id="cyberServicesGrid">
+            <!-- Populated by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Government Services Section -->
+    <section class="gov-services" id="gov-services">
+        <div class="gov-services-container">
+            <div class="section-title">
+                <h2><span>Government</span> Online Services</h2>
+                <p>Access all government services in one place. Login required to proceed.</p>
+            </div>
+            
+            <div class="login-prompt" id="loginPrompt">
+                <!-- Populated by JavaScript -->
+            </div>
+            
+            <div class="gov-services-grid" id="govServicesGrid">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="partners" id="partners">
+        <div class="section-title">
+            <h2>Our <span>Government Partners</span></h2>
+            <p>Trusted by government agencies and institutions across Kenya</p>
+        </div>
+        
+        <div class="partners-grid" id="partnersGrid">
+            <!-- Populated by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h3>Imarisha Technologies</h3>
+                <p>Trusted Online Cyber in Kenya – Your partner for all government and digital services.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <div class="quick-links-grid">
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Cyber Services</a></li>
+                        <li><a href="#gov-services">Gov Services</a></li>
+                        <li><a href="#partners">Partners</a></li>
+                    </ul>
+                    <ul>
+                        <li><a href="#" id="footerLogin">Login</a></li>
+                        <li><a href="#" id="footerRegister">Register</a></li>
+                        <li><a href="#">Courses</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Contact Info</h4>
+                <ul>
+                    <li><i class="fas fa-phone"></i> 0748156905</li>
+                    <li><i class="fas fa-envelope"></i> info@imarishatech.co.ke</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Nairobi CBD, Kenya</li>
+                    <li><i class="fas fa-clock"></i> Mon-Sat: 7AM-11PM</li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Other Services</h4>
+                <ul>
+                    <li><a href="#">Data Protection</a></li>
+                    <li><a href="#">Tech News</a></li>
+                    <li><a href="#">Downloads</a></li>
+                    <li><a href="#">Student Portal</a></li>
+                    <li><a href="#">Admissions</a></li>
+                    <li><a href="#">Donations</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>Email: info@imarishatech.co.ke | Phone: 0748156905</p>
+            <p>Copyright © MMXXVI - Developed by Imarisha Technologies | All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div class="modal" id="authModal"></div>
+    <div class="modal" id="serviceRequestModal"></div>
+    <div class="modal dashboard-modal" id="dashboardModal"></div>
+
+    <!-- JavaScript Files -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

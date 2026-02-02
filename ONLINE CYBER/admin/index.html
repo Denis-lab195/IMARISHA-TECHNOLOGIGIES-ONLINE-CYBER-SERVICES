@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imarisha Technologies | Admin Dashboard</title>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- JavaScript Modules -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js" defer></script>
+    <script src="utils.js" defer></script>
+    <script src="requests.js" defer></script>
+    <script src="employees.js" defer></script>
+    <script src="assignments.js" defer></script>
+    <script src="services.js" defer></script>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-page" id="loginPage">
+        <div class="login-container">
+            <div class="login-logo">
+                <div class="login-logo-icon">
+                    <i class="fas fa-desktop"></i>
+                </div>
+                <h1>IMARISHA TECH</h1>
+                <p>Admin Dashboard Login</p>
+            </div>
+            
+            <div class="login-error" id="loginError">
+                Invalid email or password. Please try again.
+            </div>
+            
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="admin@imarisha.co.ke" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p>Only authorized administrators can access this dashboard</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <!-- Header -->
+        <header>
+            <div class="header-container">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>IMARISHA TECHNOLOGIES</h1>
+                        <p>Admin Dashboard - Cyber Services Management</p>
+                    </div>
+                </div>
+                
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <div class="user-details">
+                        <h3 id="userName">Admin User</h3>
+                        <p id="userRole">Administrator</p>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <div class="sidebar" id="sidebar">
+            <nav class="main-nav">
+                <ul>
+                    <li class="nav-item active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-section="requests">
+                        <i class="fas fa-tasks"></i>
+                        <span>Service Requests</span>
+                        <span class="nav-badge" id="navBadgeRequests">0</span>
+                    </li>
+                    <li class="nav-item" data-section="employees">
+                        <i class="fas fa-users"></i>
+                        <span>Employees</span>
+                        <span class="nav-badge" id="navBadgeEmployees">0</span>
+                    </li>
+                    <li class="nav-item" data-section="assignments">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Job Assignments</span>
+                        <span class="nav-badge" id="navBadgeAssignments">0</span>
+                    </li>
+                    <li class="nav-item" data-section="services">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Cyber Services</span>
+                    </li>
+                    <li class="nav-item" data-section="reports">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reports</span>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="online-status">
+                    <div class="status-indicator online"></div>
+                    <span>Online</span>
+                </div>
+                <p>© 2024 Imarisha Tech</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <!-- Dashboard Section -->
+            <div class="content-section active" id="dashboardSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h2>
+                    <div class="date-display">
+                        <span id="currentDate"></span>
+                    </div>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="stat-title">Total Requests</div>
+                        </div>
+                        <div class="stat-value" id="totalRequests">0</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i> <span id="requestsTrend">0%</span> from last week
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background-color: var(--kenya-red);">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-title">Pending Assignments</div>
+                        </div>
+                        <div class="stat-value" id="pendingAssignments">0</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-users"></i> <span id="pendingEmployees">0</span> employees available
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background-color: #0081C8;">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-title">Active Employees</div>
+                        </div>
+                        <div class="stat-value" id="activeEmployees">0</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-star"></i> <span id="topEmployee">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background-color: var(--kenya-green);">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="stat-title">Total Revenue</div>
+                        </div>
+                        <div class="stat-value" id="totalRevenue">KES 0</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-chart-line"></i> <span id="revenueTrend">0%</span> growth
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showAddEmployeeModal()">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Add Employee</span>
+                        </button>
+                        <button class="action-btn" onclick="showAssignJobModal()">
+                            <i class="fas fa-clipboard-check"></i>
+                            <span>Assign Job</span>
+                        </button>
+                        <button class="action-btn" onclick="showAddServiceModal()">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Add Service</span>
+                        </button>
+                        <button class="action-btn" onclick="generateReport()">
+                            <i class="fas fa-file-export"></i>
+                            <span>Generate Report</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="recent-activity">
+                    <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                    <div class="activity-list" id="activityList">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </div>
+                            <div class="activity-details">
+                                <p>Loading recent activities...</p>
+                                <span class="activity-time">Just now</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Service Requests Section -->
+            <div class="content-section" id="requestsSection">
+                <!-- Content loaded by requests.js -->
+            </div>
+            
+            <!-- Employees Section -->
+            <div class="content-section" id="employeesSection">
+                <!-- Content loaded by employees.js -->
+            </div>
+            
+            <!-- Assignments Section -->
+            <div class="content-section" id="assignmentsSection">
+                <!-- Content loaded by assignments.js -->
+            </div>
+            
+            <!-- Services Section -->
+            <div class="content-section" id="servicesSection">
+                <!-- Content loaded by services.js -->
+            </div>
+            
+            <!-- Reports Section -->
+            <div class="content-section" id="reportsSection">
+                <!-- Content loaded by reports.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Employee Modal -->
+    <div class="modal" id="addEmployeeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> Add New Employee</h3>
+                <button class="close-modal" onclick="closeModal('addEmployeeModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="addEmployeeForm">
+                    <!-- Form loaded by employees.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Job Modal -->
+    <div class="modal" id="assignJobModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-clipboard-check"></i> Assign Job to Employee</h3>
+                <button class="close-modal" onclick="closeModal('assignJobModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="assignJobForm">
+                    <!-- Form loaded by assignments.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Service Modal -->
+    <div class="modal" id="addServiceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus-circle"></i> Add New Cyber Service</h3>
+                <button class="close-modal" onclick="closeModal('addServiceModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="addServiceForm">
+                    <!-- Form loaded by services.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Details Modal -->
+    <div class="modal" id="requestDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle"></i> Request Details</h3>
+                <button class="close-modal" onclick="closeModal('requestDetailsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="requestDetailsContent">
+                    <!-- Content loaded by requests.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Update Status Modal -->
+<div class="modal" id="updateStatusModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-edit"></i> Update Request Status</h3>
+            <button class="close-modal" onclick="closeModal('updateStatusModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="updateStatusContent">
+                <!-- Content will be loaded by requests.js -->
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Employee Details Modal -->
+    <div class="modal" id="employeeDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-tie"></i> Employee Details</h3>
+                <button class="close-modal" onclick="closeModal('employeeDetailsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="employeeDetailsContent">
+                    <!-- Content loaded by employees.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <h3>Loading...</h3>
+            <p>Please wait while we fetch your data</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Initialize App -->
+    <script>
+        // Initialize application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+            
+            // Setup navigation
+            setupNavigation();
+            
+            // Check auth state
+            checkAuthState();
+        });
+
+        // Setup sidebar navigation
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // Remove active class from all nav items
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Hide all content sections
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Show selected section
+                    const targetSection = document.getElementById(`${sectionId}Section`);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                        
+                        // Load section data if needed
+                        loadSectionData(sectionId);
+                    }
+                });
+            });
+        }
+
+        // Load section data
+        function loadSectionData(sectionId) {
+            switch(sectionId) {
+                case 'dashboard':
+                    loadDashboardData();
+                    break;
+                case 'requests':
+                    loadRequestsSection();
+                    break;
+                case 'employees':
+                    loadEmployeesSection();
+                    break;
+                case 'assignments':
+                    loadAssignmentsSection();
+                    break;
+                case 'services':
+                    loadServicesSection();
+                    break;
+                case 'reports':
+                    loadReportsSection();
+                    break;
+            }
+        }
+
+        // Global modal functions
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        // Global modal show functions
+        function showAddEmployeeModal() {
+            showModal('addEmployeeModal');
+            // Form will be loaded by employees.js
+        }
+
+        function showAssignJobModal() {
+            showModal('assignJobModal');
+            // Form will be loaded by assignments.js
+        }
+
+        function showAddServiceModal() {
+            showModal('addServiceModal');
+            // Form will be loaded by services.js
+        }
+
+        // Generate report function
+        function generateReport() {
+            showLoader();
+            // Generate and download report
+            setTimeout(() => {
+                hideLoader();
+                showToast('Report generated successfully! Download will start shortly.', 'success');
+                
+                // Create a sample report download
+                const reportData = {
+                    date: new Date().toISOString(),
+                    totalRequests: document.getElementById('totalRequests').textContent,
+                    activeEmployees: document.getElementById('activeEmployees').textContent,
+                    totalRevenue: document.getElementById('totalRevenue').textContent
+                };
+                
+                const dataStr = JSON.stringify(reportData, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                const exportFileDefaultName = `imarisha-report-${new Date().toISOString().split('T')[0]}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+            }, 1500);
+        }
+
+       // These functions will be implemented in their respective modules
+function loadDashboardData() {
+    if (typeof loadDashboardData === 'function' && window.utilsModule) {
+        // Call the actual implementation if it exists
+    }
+}
+
+function loadRequestsSection() {
+    // Safe check before calling requestsModule
+    if (window.requestsModule && typeof window.requestsModule.setupRequestsSection === 'function') {
+        window.requestsModule.setupRequestsSection();
+    } else {
+        console.warn('Requests module not ready yet');
+        // Try again in 1 second
+        setTimeout(loadRequestsSection, 1000);
+    }
+}
+
+function loadEmployeesSection() {
+    if (window.employeesModule && typeof window.employeesModule.setupEmployeesSection === 'function') {
+        window.employeesModule.setupEmployeesSection();
+    } else {
+        console.warn('Employees module not ready yet');
+        setTimeout(loadEmployeesSection, 1000);
+    }
+}
+
+function loadAssignmentsSection() {
+    if (window.assignmentsModule && typeof window.assignmentsModule.setupAssignmentsSection === 'function') {
+        window.assignmentsModule.setupAssignmentsSection();
+    } else {
+        console.warn('Assignments module not ready yet');
+        setTimeout(loadAssignmentsSection, 1000);
+    }
+}
+
+function loadServicesSection() {
+    if (window.servicesModule && typeof window.servicesModule.setupServicesSection === 'function') {
+        window.servicesModule.setupServicesSection();
+    } else {
+        console.warn('Services module not ready yet');
+        setTimeout(loadServicesSection, 1000);
+    }
+}
+
+function loadReportsSection() {
+    // Reports module might not exist, so just show a message
+    const reportsSection = document.getElementById('reportsSection');
+    if (reportsSection) {
+        reportsSection.innerHTML = `
+            <div class="section-header">
+                <h2><i class="fas fa-chart-bar"></i> Reports & Analytics</h2>
+            </div>
+            <div class="data-table-container">
+                <div class="no-data">
+                    <i class="fas fa-chart-bar fa-2x"></i>
+                    <p>Reports module coming soon</p>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">This feature is currently in development</p>
+                </div>
+            </div>
+        `;
+    }
+}
+
+        // Make functions globally available
+        window.showModal = showModal;
+        window.closeModal = closeModal;
+        window.showAddEmployeeModal = showAddEmployeeModal;
+        window.showAssignJobModal = showAssignJobModal;
+        window.showAddServiceModal = showAddServiceModal;
+        window.generateReport = generateReport;
+    </script>
+</body>
+</html>
